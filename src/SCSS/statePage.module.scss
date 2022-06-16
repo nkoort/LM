@@ -1,0 +1,97 @@
+.wrapperPage {
+   display: grid;
+   grid-template-columns: 0.1fr 1fr 0.1fr;
+   grid-template-rows: auto 1fr;
+   height: 100%;
+   padding: 10px 0 0 0;
+}
+
+
+
+.login {
+   grid-column: 3/4;
+   grid-row: 1/2;
+}
+
+.start {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   grid-column: 2/3;
+   grid-row: 2/3;
+
+}
+
+.titleBlock {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   margin: 0 0 20px 0px;
+
+   .title {
+      max-width: 500px;
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 20px 0;
+   }
+
+   .desc {
+      max-width: 400px;
+      text-align: center;
+   }
+}
+
+.buttonBlock {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   .buttonCustom {
+      padding: 10px 30px;
+   }
+}
+
+.modal {
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   width: 400;
+   border: 2px solid #000;
+   background-color: #fff;
+   // height: 200px;
+   padding: 10px;
+   border-radius: 10px;
+   transition: 5s;
+}
+
+.form {
+   display: grid;
+   grid-template-columns: 1fr;
+   gap: 15px;
+}
+
+.errorText {
+   color: #fff;
+   font-size: 14px;
+   background-color: #900;
+   padding: 5px;
+   border-radius: 7px;
+   transform: translate(0px, -10px);
+}
+
+.passBlock {
+   display: flex;
+   justify-content: space-between;
+   margin: 0 0 15px 0;
+}
+
+.passBlockContainter {
+   padding: 0 0 10px 0;
+}
+
+.buttonLogOut {
+   font-weight: 700;
+}
