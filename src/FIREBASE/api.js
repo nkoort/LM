@@ -77,12 +77,18 @@ export const profileAPI = {
 /////////////////////////////////////////////////////////////////////////////
 
 export const tasksAPI = {
-  async addTask(id, data) {
-    //  debugger
+  async addTask(id, data, taskId) {
     const ref = doc(db, 'tasks', id)
+    data.taskId = taskId
+    //  if (index) {
+    //    await updateDoc(ref, {[tasks[index]: ]})
+    //  } else {
     await updateDoc(ref, {
-      tasks: arrayUnion(data),
+      [`tasks.${taskId}`]: data,
     })
+    //  }
+
+    //
   },
   async getTasks(id) {
     const ref = doc(db, 'tasks', id)

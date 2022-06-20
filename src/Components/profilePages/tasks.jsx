@@ -8,7 +8,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Grid from '@mui/material/Grid';
 import AddTasksModal from './addTasksModal';
 import { getTasks, setStatusMessage } from '../../Redux/tasks-reducer';
-
+import TaskItem from './taskItem';
 
 
 const TasksPage = (props) => {
@@ -19,34 +19,50 @@ const TasksPage = (props) => {
    const addStatusMessage = useSelector((state) => state.tasksSlice.addStatusMessage)
 
    const [open, setOpen] = useState(false);
+   const [editMode, changeMode] = useState('')
+   const [indexItem, changeIndex] = useState('')
 
    useEffect(() => {
       dispatch(getTasks(uid))
    }, [])
 
 
-   const onOpenModal = () => {
+   function changeEditMode(mode) {
+      changeMode(mode)
+   }
+
+   const onOpenModal = (data) => {
       if (open) {
          setOpen(false)
          dispatch(setStatusMessage(null))
+         changeEditMode('')
       } else {
+         changeEditMode(data)
          setOpen(true)
       }
    }
-
-   let tasksItems = tasks.map((t, index) => {
+   let tasksItems = Object.keys(tasks).map(key => {
       return (
-         <div key={index} className={s.blockTask}>
-            <div className={s.indexNumber}>{index + 1}</div>
-            <div className={s.title}>{t.title}</div>
-            <div className={s.task}>{t.task}</div>
-         </div>
+         <TaskItem
+            key={key}
+            changeIndex={changeIndex}
+            onOpenModal={onOpenModal}
+            editMode={editMode}
+            changeEditMode={changeEditMode}
+            title={tasks[key].title}
+            task={tasks[key].task}
+            index={key}
+            startDate={tasks[key].startDate}
+            endDate={tasks[key].endDate}
+            status={tasks[key].status}
+            priority={tasks[key].priority} />
       )
    })
 
+
    return (
       <div>
-         <AddTasksModal open={open} handleClose={onOpenModal} />
+         <AddTasksModal open={open} handleClose={onOpenModal} editMode={editMode} indexItem={indexItem} />
          <div>
             <Tooltip title="Добавить новую задачу" placement="right" arrow >
                <Fab color="primary" aria-label="add" onClick={onOpenModal}>
@@ -54,7 +70,7 @@ const TasksPage = (props) => {
                </Fab>
             </Tooltip>
          </div >
-         <div>
+         <div className={s.tasksBlock}>
             {addStatusMessage}
             {tasksItems}
          </div>

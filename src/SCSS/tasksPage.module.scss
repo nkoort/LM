@@ -3,22 +3,72 @@
    gap: 15px;
 }
 
-.blockTask {
+.tasksBlock {
    display: grid;
-   grid-template-columns: 0.5fr 2fr 4fr;
+   grid-template-columns: 1fr;
+   gap: 5px;
+   margin: 20px 0 0 0;
+}
 
-   .indexNumber {
-      // margin: 0 10px 0 0;
-      border: 1px solid #111;
+.calendar label {
+   font-size: 12px;
+}
+
+.taskDetail {
+   border-top: 1px solid black;
+
+   .taskMainText {
+      max-width: 500px;
+
+      &__text {
+         padding: 5px 10px;
+
+      }
+
+      &__dates {
+         font-size: 10px;
+         display: flex;
+         gap: 10px;
+         margin: 10px 0 0 0;
+
+         .dateStart {}
+
+         .dateEnd {}
+      }
+
+
+   }
+}
+
+.titleBlock {
+   display: flex;
+   gap: 10px;
+
+   &__index {
+      font-weight: 700;
+
+      &:after {
+         content: '.';
+      }
    }
 
-   .title {
-      border: 1px solid #111;
+   &__title {
+      padding: 0 10px;
    }
+}
 
-   .task {
-      border: 1px solid #111;
+.editBlock {
+   margin: 10px 0 10px 0;
+   border: 1px solid #111;
+}
+
+.taskDetailBlock {
+   display: flex;
+   justify-content: space-between;
+
+   .buttonEdit {
+      font-size: 8px;
+      padding: 2px;
    }
-
 
 }

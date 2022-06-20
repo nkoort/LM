@@ -1,8 +1,12 @@
 import s from '../../SCSS/tasksPage.module.scss'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm, Controller } from "react-hook-form"
+import { useDispatch, useSelector } from 'react-redux'
+import { nanoid } from '@reduxjs/toolkit'
+import { size } from 'lodash'
 
+import { addTask } from '../../Redux/tasks-reducer'
 
 
 import Box from '@mui/material/Box'
@@ -12,9 +16,11 @@ import TextField from '@mui/material/TextField'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { addTask } from '../../Redux/tasks-reducer'
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import NativeSelect from '@mui/material/NativeSelect';
 
 
 
@@ -36,34 +42,74 @@ export default function AddTasksModal(props) {
    const addStatusMessage = useSelector((state) => state.tasksSlice.addStatusMessage)
    const uid = useSelector((state) => state.registerSlice.profile)
    const addStatus = useSelector((state) => state.tasksSlice.addStatus)
-   const { register, handleSubmit, formState: { errors }, control, reset } = useForm()
+   const tasks = useSelector((state) => state.tasksSlice.tasks)
 
+
+
+   let defaultValues = ''
+   if (props.editMode === 'edit') {
+
+      defaultValues = {
+         task: tasks[props.indexItem].task,
+         title: tasks[props.indexItem].title,
+         status: tasks[props.indexItem].status,
+         priority: tasks[props.indexItem].priority,
+
+      }
+   } else {
+      defaultValues = {
+         title: ''
+      }
+   }
+
+   const { register, handleSubmit, formState: { errors }, control, reset } = useForm()
 
    const [disabledForm, disabledChange] = useState(false)
    const [valueDateStart, setValueDateStart] = useState(null)
    const [valueDateEnd, setValueDateEnd] = useState(null)
+   const [valueDateEndFact, setValueDateEndFact] = useState(null)
+   const [status, setStatus] = useState('');
+   const [priority, setPriority] = useState('');
 
-   console.log(addStatus)
+
+
+   const handleChangeStatus = (event) => {
+      setStatus(event.target.value);
+   };
+   const handleChangePriority = (event) => {
+      setPriority(event.target.value);
+   };
+
    useEffect(() => {
-      let d = new Date()
-      let year = d.getFullYear()
-      let month = d.getMonth() + 1 <= 9 ? '0' + String(d.getMonth() + 1) : d.getMonth() + 1
-      let day = d.getDate() <= 9 ? '0' + String(d.getDate()) : d.getDate()
-      setValueDateStart(`${day}.${month}.${year}`)
-      if (addStatus === true) {
-         disabledChange(false)
+      if (props.editMode === 'edit') {
+         setValueDateStart(tasks[props.indexItem].startDate.seconds * 1000)
+         setValueDateEnd(tasks[props.indexItem].endDate.seconds * 1000)
+         // setValueDateEndFact(tasks[props.indexItem].endDateFact.seconds * 1000)
+         // setValueDateEndFact()
       }
-   }, [addStatus])
+   }, [props.editMode]);
 
    const onSubmit = (data) => {
-      const arrData = [uid.id, data]
-      dispatch(addTask(arrData))
+      let taskId = nanoid(10)
+      if (props.indexItem !== '') {
+         data.number = size(tasks)
+      } else {
+         data.number = size(tasks) + 1
+      }
+      const arrData = [uid.id, data, taskId]
+      const arrData2 = [uid.id, data, props.indexItem]
+      if (props.indexItem !== '') {
+         dispatch(addTask(arrData2))
+      } else {
+         dispatch(addTask(arrData))
+      }
       disabledChange(true)
-
       setValueDateEnd(null)
       setValueDateStart(null)
+      setValueDateEndFact(null)
       reset()
    }
+
    return (
       <div>
          <Modal
@@ -76,29 +122,39 @@ export default function AddTasksModal(props) {
                {addStatusMessage && <div style={{ margin: '0 0 15px 0', textAlign: 'center' }}>{addStatusMessage}</div>}
                <form onSubmit={handleSubmit(onSubmit)} className={s.formAddTask}>
                   <div className={s.inputContainer}>
-                     <TextField
-                        {...register("title")}
-                        disabled={disabledForm}
-                        fullWidth
-                        id="outlined-textarea"
-                        label="Название"
-                        multiline
-                     />
-                     <TextField
-                        {...register("task")}
-                        disabled={disabledForm}
-                        fullWidth
-                        id="outlined-textarea"
-                        label="Описание задачи"
-                        multiline
-                        rows={4}
-                     />
+                     <Controller
+                        control={control}
+                        {...register('title')}
+                        render={({ field: { onChange } }) => <TextField
+                           defaultValue={defaultValues.title}
+                           disabled={disabledForm}
+                           fullWidth
+                           onChange={onChange}
+                           id="outlined-textarea"
+                           label="Название"
+                           multiline />
+                        } />
+                     <Controller
+                        control={control}
+                        {...register('task')}
+                        render={({ field: { onChange } }) => <TextField
+                           disabled={disabledForm}
+                           defaultValue={defaultValues.task}
+                           fullWidth
+                           onChange={onChange}
+                           id="outlined-textarea"
+                           label="Описание задачи"
+                           multiline
+                           rows={4}
+                        />
+                        } />
+
                      <div style={{ display: 'flex', gap: '10px' }}>
                         <Controller
                            name="startDate"
                            control={control}
                            rules={{ required: true }}
-                           render={({ field }) => <LocalizationProvider dateAdapter={AdapterDateFns}>
+                           render={({ field }) => <LocalizationProvider dateAdapter={AdapterDateFns} >
                               <DatePicker
                                  disabled={disabledForm}
                                  p='4'
@@ -106,13 +162,9 @@ export default function AddTasksModal(props) {
                                  value={valueDateStart}
                                  onChange={(newValue) => {
                                     setValueDateStart(newValue)
-                                    let d = new Date(newValue)
-                                    let year = d.getFullYear(newValue)
-                                    let month = d.getMonth(newValue) + 1 <= 9 ? '0' + String(d.getMonth(newValue) + 1) : d.getMonth(newValue) + 1
-                                    let day = d.getDate(newValue) <= 9 ? '0' + String(d.getDate(newValue)) : d.getDate(newValue)
-                                    field.onChange(`${day}.${month}.${year}`)
+                                    field.onChange(newValue)
                                  }}
-                                 renderInput={(params) => <TextField {...params} />}
+                                 renderInput={(params) => <TextField {...params} className={s.calendar} />}
                               />
                            </LocalizationProvider>}
                         />
@@ -128,24 +180,20 @@ export default function AddTasksModal(props) {
                                  value={valueDateEnd}
                                  onChange={(newValue) => {
                                     setValueDateEnd(newValue)
-                                    let d = new Date(newValue)
-                                    let year = d.getFullYear(newValue)
-                                    let month = d.getMonth(newValue) + 1 <= 9 ? '0' + String(d.getMonth(newValue) + 1) : d.getMonth(newValue) + 1
-                                    let day = d.getDate(newValue) <= 9 ? '0' + String(d.getDate(newValue)) : d.getDate(newValue)
-                                    field.onChange(`${day}.${month}.${year}`)
+                                    field.onChange(newValue)
                                  }}
-                                 renderInput={(params) => <TextField {...params} />}
+                                 renderInput={(params) => <TextField {...params} className={s.calendar} />}
                               />
                            </LocalizationProvider>}
                         />
                      </div>
-
-                     <div>
-                        <Button variant="contained" type='submit' disabled={disabledForm}>Сохранить</Button>
-                     </div>
                   </div>
 
 
+
+                  <div>
+                     <Button variant="contained" type='submit' disabled={disabledForm}>Сохранить</Button>
+                  </div>
                </form>
 
             </Box>

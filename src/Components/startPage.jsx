@@ -19,7 +19,7 @@ const StartPage = (props) => {
    const [openLogin, changeOpenLogin] = useState(false);
 
    if (profileStatus) {
-      return <Navigate to='/profile/tasks' />
+      return <Navigate to='/profile/user' />
    }
    return (
       <div className={s.wrapperPage}>

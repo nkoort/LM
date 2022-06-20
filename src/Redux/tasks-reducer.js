@@ -1,17 +1,18 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { tasksAPI } from '../FIREBASE/api'
+import { size } from 'lodash'
 
 export const addTask = createAsyncThunk(
   'loginSlice/addtask',
   async (params) => {
-    let res = await tasksAPI.addTask(params[0], params[1])
+    let res = await tasksAPI.addTask(params[0], params[1], params[2])
     return params
   },
 )
 
 export const getTasks = createAsyncThunk('loginSlice/getTasks', async (id) => {
   const res = await tasksAPI.getTasks(id)
-  //   debugger
+  console.log(size(res.tasks))
   return res
 })
 
@@ -36,7 +37,7 @@ const tasksSlice = createSlice({
         state.addStatusMessage = 'Сохранение....'
       })
       .addCase(addTask.fulfilled, (state, action) => {
-        state.tasks.push(action.payload[1])
+        state.tasks[action.payload[2]] = action.payload[1]
         state.addStatus = true
         state.addStatusMessage = 'Задачу добавлено! Поздравляем'
       })
