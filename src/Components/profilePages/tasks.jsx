@@ -2,6 +2,7 @@ import s from '../../SCSS/tasksPage.module.scss';
 
 import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { orderBy } from 'lodash';
 
 import Fab from '@mui/material/Fab';
 import Tooltip from '@mui/material/Tooltip';
@@ -41,21 +42,29 @@ const TasksPage = (props) => {
          setOpen(true)
       }
    }
-   let tasksItems = Object.keys(tasks).map(key => {
+
+
+   let newArr = []
+   let arr = Object.keys(tasks).map(key => {
+      newArr.push(tasks[key])
+   })
+   let orderObj = orderBy(newArr, ['number'], ['asc'])
+   let tasksItems = orderObj.map(i => {
       return (
          <TaskItem
-            key={key}
+            key={i.taskId}
             changeIndex={changeIndex}
             onOpenModal={onOpenModal}
             editMode={editMode}
             changeEditMode={changeEditMode}
-            title={tasks[key].title}
-            task={tasks[key].task}
-            index={key}
-            startDate={tasks[key].startDate}
-            endDate={tasks[key].endDate}
-            status={tasks[key].status}
-            priority={tasks[key].priority} />
+            title={i.title}
+            task={i.task}
+            index={i.taskId}
+            number={i.number}
+            startDate={i.startDate}
+            endDate={i.endDate}
+            status={i.status}
+            priority={i.priority} />
       )
    })
 

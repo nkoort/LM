@@ -3,9 +3,9 @@ import s from '../../SCSS/tasksPage.module.scss';
 import * as dayjs from 'dayjs'
 import * as isLeapYear from 'dayjs/plugin/isLeapYear' // import plugin
 import 'dayjs/locale/ru'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-
+import classnames from 'classnames';
 
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -19,9 +19,16 @@ import Button from '@mui/material/Button'
 
 dayjs.locale('ru')
 
-const TaskItem = ({ title, task, index, startDate, endDate, onOpenModal, changeIndex, priority = 'null null', status = 'null null' }) => {
+const TaskItem = ({ title, task, index, number, startDate, endDate, onOpenModal, changeIndex, priority = null, status = null }) => {
+   const [newStatus, statusChange] = useState(status)
 
+   useEffect(() => {
+      let b = Date.parse(new Date()) / 1000
+      if (endDate.seconds < b) {
 
+         statusChange('Overdue')
+      }
+   }, [])
    function dateCreater(date) {
       return (
          date.seconds ?
@@ -35,11 +42,18 @@ const TaskItem = ({ title, task, index, startDate, endDate, onOpenModal, changeI
          Math.round(((Date.parse(new Date(dateE)) / 1000 - Date.parse(new Date()) / 1000) / 86400))
    }
 
-   let b = Date.parse(new Date())
+
 
    function openModal(data, index) {
       onOpenModal(data)
       changeIndex(index)
+   }
+   const statusObj = {
+      'New': 'Новая',
+      'In work': 'В работе',
+      'Completed': 'Завершено',
+      'Canceled': 'Отменено',
+      'Overdue': 'Просрочено',
    }
 
    return (
@@ -50,8 +64,28 @@ const TaskItem = ({ title, task, index, startDate, endDate, onOpenModal, changeI
                aria-controls="panel1a-content"
                id="panel1a-header">
                <div className={s.titleBlock}>
-                  <div className={s.titleBlock__index}>{index + 1}</div>
-                  <div className={s.titleBlock__title}>{title}</div>
+                  <div className={s.titleBlock__index}>{number}</div>
+                  <div className={
+                     classnames(
+                        s.titleBlock__preTitle,
+                        {
+                           [s.new]: status === 'New',
+                           [s.inWork]: status === 'In work',
+                           [s.completed]: status === 'Completed',
+                           [s.canceled]: status === 'Canceled',
+                           [s.overdue]: status === 'Overdue',
+                        }
+
+                     )
+                  }
+                  >{statusObj[newStatus]}</div>
+                  <div className={
+                     classnames(
+                        s.titleBlock__title,
+                        s.mainTitle
+
+                     )
+                  }>{title}</div>
                </div>
 
             </AccordionSummary>

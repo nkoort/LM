@@ -12,7 +12,6 @@ export const addTask = createAsyncThunk(
 
 export const getTasks = createAsyncThunk('loginSlice/getTasks', async (id) => {
   const res = await tasksAPI.getTasks(id)
-  console.log(size(res.tasks))
   return res
 })
 

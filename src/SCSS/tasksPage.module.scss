@@ -55,11 +55,35 @@
    &__title {
       padding: 0 10px;
    }
+
+   &__preTitle {
+      padding: 0 10px;
+      border-radius: 10px;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &.new {
+         background-color: yellow;
+      }
+
+      &.completed {
+         background-color: grey;
+      }
+
+      &.inWork {
+         background-color: green;
+      }
+
+      &.canceled {
+         background-color: rgb(181, 43, 43);
+      }
+   }
 }
 
 .editBlock {
    margin: 10px 0 10px 0;
-   border: 1px solid #111;
 }
 
 .taskDetailBlock {
