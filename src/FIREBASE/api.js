@@ -18,6 +18,8 @@ import {
   arrayUnion,
 } from 'firebase/firestore'
 
+import { getStorage, ref, uploadBytes } from 'firebase/storage'
+
 const firebaseConfig = {
   apiKey: 'AIzaSyDRrYxJB50ropBvUh0y7kxl31FbCMSwWzY',
   authDomain: 'lifemanager-59bee.firebaseapp.com',
@@ -30,6 +32,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const analytics = getAnalytics(app)
 const db = getFirestore(app)
+const storage = getStorage(app)
 /////////////////// NEXT ROWS WITH USER API CODE ///////////////////
 
 /////////////////////////////////////////////////////////////////////////////
@@ -45,7 +48,7 @@ export const authAPI = {
     let res = await createUserWithEmailAndPassword(auth, email, password)
     debugger
     const ref = doc(db, 'tasks', res.user.uid)
-    await setDoc(ref, { startValue: 'value' })
+    await setDoc(ref, { new: { startValue: 'value' } })
     return res
   },
   async setProfile(profile, id) {
@@ -69,6 +72,14 @@ export const profileAPI = {
     const docSnap = await getDoc(ref)
     let profile = docSnap.data()
     return profile
+  },
+  async uploadPhoto(id, file) {
+    //  const storage = getStorage()
+    const storageRef = ref(storage, id)
+    uploadBytes(storageRef, file).then((snapshot) => {
+      console.log('Uploaded a blob or file!')
+      console.log(snapshot)
+    })
   },
 }
 

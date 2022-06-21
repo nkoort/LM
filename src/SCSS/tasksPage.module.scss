@@ -161,3 +161,26 @@
 
    &__stats {}
 }
+
+.lineBlock {
+   position: relative;
+
+   &__counter {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      transform: translate(0%, -30%);
+      height: 100%;
+      width: 150px;
+      z-index: 1;
+   }
+}
+
+.radioBlock {
+   margin: 0 0 0 20px;
+
+   .title {
+      font-size: 12px;
+
+   }
+}

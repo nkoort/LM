@@ -149,12 +149,15 @@ export default function PersistentDrawerLeft() {
 
                {linkData.map((value, index) => (
                   <ListItem key={value[1]} disablePadding>
-                     <ListItemButton>
-                        <ListItemIcon>
-                           {value[2]}
-                        </ListItemIcon>
-                        <NavLink to={`/profile/${value[1]}`}>{value[0]}</NavLink>
-                     </ListItemButton>
+                     <NavLink to={`/profile/${value[1]}`} className={s.linkMenu}>
+                        <ListItemButton>
+                           <ListItemIcon>
+                              {value[2]}
+                           </ListItemIcon>
+                           <div>{value[0]}</div>
+                        </ListItemButton>
+                     </NavLink>
+
                   </ListItem>
                ))}
             </List>

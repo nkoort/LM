@@ -85,10 +85,7 @@ export default function AddTasksModal(props) {
 
 
    const { register, watch, handleSubmit, formState: { errors }, control, reset, setError, clearErrors } = useForm({
-      defaultValues: {
-         task: tasks[indexItem] ? taskText : '',
-         title: tasks[indexItem] ? titeText : '',
-      },
+
       mode: 'onSubmit',
       reValidateMode: 'onChange',
       resolver: undefined,

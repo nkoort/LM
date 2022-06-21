@@ -6,7 +6,8 @@ export const addTask = createAsyncThunk(
   'loginSlice/addtask',
   async (params) => {
     let res = await tasksAPI.addTask(params[0], params[1], params[2])
-    return params
+    const objCorrect = { [params[2]]: params[1] }
+    return objCorrect
   },
 )
 
@@ -16,7 +17,7 @@ export const getTasks = createAsyncThunk('loginSlice/getTasks', async (id) => {
 })
 
 const initialState = {
-  tasks: [],
+  tasks: '',
   addStatus: false,
   addStatusMessage: null,
 }
@@ -36,7 +37,7 @@ const tasksSlice = createSlice({
         state.addStatusMessage = 'Сохранение....'
       })
       .addCase(addTask.fulfilled, (state, action) => {
-        state.tasks[action.payload[2]] = action.payload[1]
+        state.tasks = action.payload
         state.addStatus = true
         state.addStatusMessage = 'Задачу добавлено! Поздравляем'
       })

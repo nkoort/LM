@@ -11,6 +11,12 @@
 .login {
    grid-column: 3/4;
    grid-row: 1/2;
+   margin: 0 10px 0 0;
+
+   button {
+      background-color: rgba(105, 105, 144, 0.7);
+      font-weight: 700;
+   }
 }
 
 .start {
@@ -90,8 +96,4 @@
 
 .passBlockContainter {
    padding: 0 0 10px 0;
-}
-
-.buttonLogOut {
-   font-weight: 700;
 }

@@ -19,12 +19,12 @@ const StartPage = (props) => {
    const [openLogin, changeOpenLogin] = useState(false);
 
    if (profileStatus) {
-      return <Navigate to='/profile/tasks' />
+      return <Navigate to='/profile/user' />
    }
    return (
       <div className={s.wrapperPage}>
          <div className={s.login} onClick={() => changeOpenLogin(true)}>
-            <Button className={s.buttonLogOut}>Авторизация</Button>
+            <Button className={s.buttonLogOut} variant="contained">Авторизация</Button>
          </div>
          <div className={s.start}>
             <div className={s.titleBlock}>
