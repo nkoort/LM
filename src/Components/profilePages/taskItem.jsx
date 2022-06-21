@@ -19,26 +19,30 @@ import Button from '@mui/material/Button'
 
 dayjs.locale('ru')
 
-const TaskItem = ({ title, task, index, number, startDate, endDate, onOpenModal, changeIndex, priority = null, status = null }) => {
+const TaskItem = ({ title, task, index, number, startDate, endDate, endDateFact, onOpenModal, changeIndex, priority = null, status = null }) => {
    const [newStatus, statusChange] = useState(status)
 
    useEffect(() => {
-      let b = Date.parse(new Date()) / 1000
-      if (endDate.seconds < b) {
+      statusChange(status)
+      let b = Date.parse(new Date())
 
-         statusChange('Overdue')
+      if (endDate < b) {
+         if (status === 'In work' || status === 'New') {
+            statusChange('Overdue')
+         } else {
+            statusChange(status)
+         }
       }
-   }, [])
+   }, [status, endDate])
    function dateCreater(date) {
+
       return (
-         date.seconds ?
-            dayjs(new Date(date.seconds * 1000)).format('MMMM D, YYYY') :
-            dayjs(new Date(Date.parse(date))).format('MMMM D, YYYY')
+         dayjs(new Date(date)).format('MMMM D, YYYY')
       )
    }
    function countDay(dateE, dateS) {
-      return dateE.seconds ?
-         Math.round(((new Date(dateE.seconds) - Date.parse(new Date()) / 1000) / 86400)) :
+      return dateE ?
+         Math.round(((new Date(dateE / 1000) - Date.parse(new Date()) / 1000) / 86400)) :
          Math.round(((Date.parse(new Date(dateE)) / 1000 - Date.parse(new Date()) / 1000) / 86400))
    }
 
@@ -55,6 +59,11 @@ const TaskItem = ({ title, task, index, number, startDate, endDate, onOpenModal,
       'Canceled': 'Отменено',
       'Overdue': 'Просрочено',
    }
+   const priorityObj = {
+      'high': 'Высокий',
+      'medium': 'Средний',
+      'low': 'Низкий',
+   }
 
    return (
       <div>
@@ -69,13 +78,12 @@ const TaskItem = ({ title, task, index, number, startDate, endDate, onOpenModal,
                      classnames(
                         s.titleBlock__preTitle,
                         {
-                           [s.new]: status === 'New',
-                           [s.inWork]: status === 'In work',
-                           [s.completed]: status === 'Completed',
-                           [s.canceled]: status === 'Canceled',
-                           [s.overdue]: status === 'Overdue',
+                           [s.new]: newStatus === 'New',
+                           [s.inWork]: newStatus === 'In work',
+                           [s.completed]: newStatus === 'Completed',
+                           [s.canceled]: newStatus === 'Canceled',
+                           [s.overdue]: newStatus === 'Overdue',
                         }
-
                      )
                   }
                   >{statusObj[newStatus]}</div>
@@ -83,7 +91,6 @@ const TaskItem = ({ title, task, index, number, startDate, endDate, onOpenModal,
                      classnames(
                         s.titleBlock__title,
                         s.mainTitle
-
                      )
                   }>{title}</div>
                </div>
@@ -92,14 +99,44 @@ const TaskItem = ({ title, task, index, number, startDate, endDate, onOpenModal,
             <AccordionDetails className={s.taskDetail}>
                <div className={s.taskDetailBlock}>
                   <div className={s.taskMainText}>
-                     <div className={s.taskMainText__dates}>
-                        <div className={s.dateStart}>Период выполнения: {dateCreater(startDate)}</div>
-                        <div className={s.dateEnd}> - {dateCreater(endDate)}</div>
-                        <div>{`(${countDay(endDate, startDate)})`}</div>
+                     <div className={s.taskMainText__info}>
+                        <div>
+                           <span className={s.dateStart}>Период выполнения: {dateCreater(startDate)}</span>
+                           <span className={s.dateEnd}> - {dateCreater(endDate)}</span>
+                        </div>
+                        <div>{`Остаток дней: ${countDay(endDate, startDate)}`}</div>
+                        {endDateFact &&
+                           <div className={s.dateEnd}>  Фактически завершено: {dateCreater(endDateFact)}</div>
+                        }
+                        <div className={s.statusBlock}>
+                           <div
+                              className={
+                                 classnames(
+                                    s.titleBlock__preTitle,
+                                    {
+                                       [s.new]: newStatus === 'New',
+                                       [s.inWork]: newStatus === 'In work',
+                                       [s.completed]: newStatus === 'Completed',
+                                       [s.canceled]: newStatus === 'Canceled',
+                                       [s.overdue]: newStatus === 'Overdue',
+                                    }
+                                 )
+                              }>{statusObj[newStatus]}</div>
+                           <div
+                              className={
+                                 classnames(
+                                    s.titleBlock__prority,
+                                    {
+                                       [s.high]: priority === 'high',
+                                       [s.medium]: priority === 'medium',
+                                       [s.low]: priority === 'low',
+                                    }
+                                 )
+                              }>{priorityObj[priority]}</div>
+                        </div>
                      </div>
                      <div className={s.taskMainText__text}>{task}</div>
-                     <div>{status}</div>
-                     <div>{priority}</div>
+
                   </div>
 
                   <div className={s.taskEdit}>

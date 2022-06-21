@@ -18,17 +18,18 @@
    border-top: 1px solid black;
 
    .taskMainText {
-      max-width: 500px;
+      width: 100%;
 
       &__text {
          padding: 5px 10px;
 
       }
 
-      &__dates {
+      &__info {
          font-size: 10px;
          display: flex;
-         gap: 10px;
+         flex-direction: column;
+         // gap: 10px;
          margin: 10px 0 0 0;
 
          .dateStart {}
@@ -36,6 +37,11 @@
          .dateEnd {}
       }
 
+      .statusBlock {
+         display: flex;
+         gap: 10px;
+         margin: 10px 0;
+      }
 
    }
 }
@@ -54,6 +60,11 @@
 
    &__title {
       padding: 0 10px;
+      text-transform: uppercase;
+
+      &:hover {
+         text-decoration: underline;
+      }
    }
 
    &__preTitle {
@@ -63,9 +74,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      color: #fff;
 
       &.new {
          background-color: yellow;
+         color: #111;
       }
 
       &.completed {
@@ -79,6 +92,47 @@
       &.canceled {
          background-color: rgb(181, 43, 43);
       }
+
+      &.overdue {
+         background-color: #111;
+      }
+   }
+
+   &__prority {
+
+      &.high,
+      &.medium,
+      &.low {
+         position: relative;
+
+         &::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            width: 70%;
+            transition: 0.5s;
+         }
+
+         &:hover:after {
+            cursor: pointer;
+            width: 100%;
+            transition: 0.5s;
+         }
+      }
+
+      &.high:after {
+         background-color: #900;
+      }
+
+      &.medium:after {
+         background-color: rgb(178, 189, 26);
+      }
+
+      &.low:after {
+         background-color: rgb(8, 153, 0);
+      }
    }
 }
 
@@ -87,12 +141,23 @@
 }
 
 .taskDetailBlock {
-   display: flex;
-   justify-content: space-between;
+   display: grid;
+   grid-template-columns: 1fr auto;
 
    .buttonEdit {
       font-size: 8px;
       padding: 2px;
    }
 
+}
+
+.toolBar {
+   display: flex;
+   align-items: center;
+
+   &__addBtn {
+      margin: 0 20px 0 0;
+   }
+
+   &__stats {}
 }

@@ -48,7 +48,7 @@ export default function AddTasksModal(props) {
    const addStatus = useSelector((state) => state.tasksSlice.addStatus)
    const tasks = useSelector((state) => state.tasksSlice.tasks)
 
-   const [defaultValues, defChange] = useState({})
+
    const [titeText, changeTitle] = useState('')
    const [taskText, changeTask] = useState('')
    const [disabledForm, disabledChange] = useState(false)
@@ -57,84 +57,97 @@ export default function AddTasksModal(props) {
    const [valueDateEndFact, setValueDateEndFact] = useState(null)
    const [status, setStatus] = useState('');
    const [priority, setPriority] = useState('');
+   const indexItem = props.indexItem
 
 
    useEffect(() => {
-      debugger
-      if (props.indexItem !== '') {
-         changeTask(tasks[props.indexItem].task)
-         changeTitle(tasks[props.indexItem].title)
-         setStatus(tasks[props.indexItem].status)
-         setPriority(tasks[props.indexItem].priority)
-         setValueDateStart(tasks[props.indexItem].startDate.seconds * 1000)
-         setValueDateEnd(tasks[props.indexItem].endDate.seconds * 1000)
+      if (indexItem !== '') {
+         let start = tasks[indexItem].startDate
+         let end = tasks[indexItem].endDate
+         let fact = tasks[indexItem].endDateFact
+         changeTask(tasks[indexItem].task)
+         changeTitle(tasks[indexItem].title)
+         setStatus(tasks[indexItem].status)
+         setPriority(tasks[indexItem].priority)
+         setValueDateStart(start ? start : null)
+         setValueDateEnd(end ? end : null)
+         setValueDateEndFact(fact ? fact : null)
+      } else {
+         changeTask(null)
+         changeTitle(null)
+         setStatus(null)
+         setPriority(null)
+         setValueDateStart(null)
+         setValueDateEnd(null)
+         setValueDateEndFact(null)
       }
+   }, [indexItem])
 
-   }, [props.indexItem])
-   // if (props.editMode === 'edit') {
-   //    defaultValues = 
-   // } else {
-   //    defaultValues = {
-   //       title: ''
-   //    }
-   // }
 
    const { register, watch, handleSubmit, formState: { errors }, control, reset, setError, clearErrors } = useForm({
-      defaultValues
+      defaultValues: {
+         task: tasks[indexItem] ? taskText : '',
+         title: tasks[indexItem] ? titeText : '',
+      },
+      mode: 'onSubmit',
+      reValidateMode: 'onChange',
+      resolver: undefined,
+      context: undefined,
+      criteriaMode: "firstError",
+      shouldFocusError: true,
+      shouldUnregister: false,
+      shouldUseNativeValidation: false,
+      delayError: undefined
    })
 
 
 
-
-
-   const handleChangeStatus = (event) => {
-      setStatus(event.target.value);
-   };
-   const handleChangePriority = (event) => {
-      setPriority(event.target.value);
-   };
-
-
-
    const onSubmit = (data) => {
-      debugger
+
+      data = {
+         title: titeText,
+         task: taskText,
+         startDate: valueDateStart,
+         endDate: valueDateEnd,
+         status: status,
+         priority: priority,
+         endDateFact: valueDateEndFact,
+      }
+
       let newObj = {}
       let newData = Object.keys(data).map(m => data[m] ? newObj[m] = data[m] : '')
 
       let taskId = nanoid(10)
-      if (props.indexItem !== '') {
-         newObj.number = tasks[props.indexItem].number
+      if (indexItem !== '') {
+         newObj.number = tasks[indexItem].number
       } else {
          newObj.number = size(tasks) + 1
       }
       const arrData = [uid.id, newObj, taskId]
-      const arrData2 = [uid.id, newObj, props.indexItem]
-      if (props.indexItem !== '') {
+      const arrData2 = [uid.id, newObj, indexItem]
+      if (indexItem !== '') {
          dispatch(addTask(arrData2))
       } else {
          dispatch(addTask(arrData))
       }
-      setValueDateEnd(null)
+      props.changeIndex('')
+      changeTask('')
+      changeTitle('')
+      setStatus('New')
+      setPriority('high')
       setValueDateStart(null)
+      setValueDateEnd(null)
       setValueDateEndFact(null)
       reset()
    }
 
-
-
-   const startDate = watch('startDate')
-   const watchTitle = watch('title')
-   // if (size(watchTitle) < 2) {
-   //    setError('titleError', { type: 'titleError', message: 'custom message' });
-   // } else {
-   //    clearErrors('titleError')
-   // }
 
    const errorsItems = Object.keys(errors).map(key => {
       return (
          <div>{key} - {errors[key].type}</div>
       )
    })
+
 
 
    return (
@@ -150,29 +163,9 @@ export default function AddTasksModal(props) {
                <form onSubmit={handleSubmit(onSubmit)} className={s.formAddTask}>
                   <div className={s.inputContainer}>
                      <div>{errors && errorsItems}</div>
-                     {/* <Controller
-                        control={control}
-                        defaultValue={titeText}
-                        {...register('title', { minLength: 2, maxLength: 80 })}
-                        render={({ field: { onChange, value } }) => <TextField
-                           disabled={disabledForm}
-                           fullWidth
-                           value={titeText}
-
-                           onChange={(value) => {
-                              changeTitle(value.currentTarget.value)
-                              onChange(value.currentTarget.value)
-                           }}
-                           id="outlined-textarea"
-                           label="Название"
-                           multiline />
-                        } /> */}
-
                      <TextField
-                        {...register('title', { minLength: 2, maxLength: 120 })}
+                        {...register('title', { minLength: 2, maxLength: 80 })}
                         control={control}
-                        disabled={disabledForm}
-                        // defaultValue={titeText}
                         fullWidth
                         value={titeText}
                         onChange={(value) => {
@@ -183,8 +176,6 @@ export default function AddTasksModal(props) {
                         multiline />
                      <TextField
                         {...register('task', { minLength: 2, maxLength: 1000 })}
-                        disabled={disabledForm}
-                        // defaultValue={taskText}
                         fullWidth
                         value={taskText}
                         onChange={(value) => {
@@ -201,16 +192,21 @@ export default function AddTasksModal(props) {
                            name="startDate"
                            control={control}
                            rules={{}}
-
                            render={({ field }) => <LocalizationProvider dateAdapter={AdapterDateFns} >
                               <DatePicker
 
-                                 disabled={disabledForm}
+
                                  p='4'
                                  label="Дата начала"
                                  value={valueDateStart}
                                  onChange={(newValue) => {
-                                    setValueDateStart(newValue)
+                                    if (newValue > valueDateEnd && valueDateEnd > 0) {
+                                       setError('startDateError', { type: 'errorDate', message: 'custom message' });
+                                    } else {
+                                       clearErrors('startDateError')
+                                    }
+                                    let data = Date.parse(newValue)
+                                    setValueDateStart(data)
                                     field.onChange(newValue)
                                  }}
                                  renderInput={(params) => <TextField {...params} className={s.calendar} fullWidth />}
@@ -223,17 +219,17 @@ export default function AddTasksModal(props) {
                            rules={{}}
                            render={({ field }) => <LocalizationProvider dateAdapter={AdapterDateFns}>
                               <DatePicker
-                                 disabled={disabledForm}
                                  p='2'
                                  label="Дата завершения"
                                  value={valueDateEnd}
                                  onChange={(newValue) => {
-                                    if (newValue < startDate) {
+                                    if (newValue < valueDateStart) {
                                        setError('endDate1', { type: 'errorDate', message: 'custom message' });
                                     } else {
                                        clearErrors('endDate1')
                                     }
-                                    setValueDateEnd(newValue)
+                                    let data = Date.parse(newValue)
+                                    setValueDateEnd(data)
                                     field.onChange(newValue)
                                  }}
                                  renderInput={(params) => <TextField {...params} className={s.calendar} fullWidth />}
@@ -247,7 +243,10 @@ export default function AddTasksModal(props) {
                         <InputLabel id="demo-select-small">Статус</InputLabel>
                         <NativeSelect
                            {...register('status')}
-                           defaultValue={defaultValues.status}
+                           value={status}
+                           onChange={(value) => {
+                              setStatus(value.currentTarget.value)
+                           }}
                         >
                            <option value={'New'}>Новая</option>
                            <option value={'In work'}>В работе</option>
@@ -259,28 +258,28 @@ export default function AddTasksModal(props) {
                         <InputLabel id="demo-select-small">Приоритет</InputLabel>
                         <NativeSelect
                            {...register('priority')}
-                           defaultValue={defaultValues.priority}
+                           value={priority}
+                           onChange={(value) => {
+                              setPriority(value.currentTarget.value)
+                           }}
                         >
                            <option value={'high'}>Высокий</option>
                            <option value={'medium'}>Средний</option>
                            <option value={'low'}>Низкий</option>
                         </NativeSelect>
                      </FormControl>
-
-
-
-
                      <Controller
                         name="endDateFact"
                         control={control}
                         render={({ field }) => <LocalizationProvider dateAdapter={AdapterDateFns}>
                            <DatePicker
-                              disabled={disabledForm}
+
                               p='2'
                               label="Фактическая дата завершения"
                               value={valueDateEndFact}
                               onChange={(newValue) => {
-                                 setValueDateEndFact(newValue)
+                                 let data = Date.parse(newValue)
+                                 setValueDateEndFact(data)
                                  field.onChange(newValue)
                               }}
                               renderInput={(params) => <TextField {...params} className={s.calendar} fullWidth />}
@@ -291,7 +290,7 @@ export default function AddTasksModal(props) {
 
 
                   <div>
-                     <Button variant="contained" type='submit' disabled={disabledForm}>Сохранить</Button>
+                     <Button variant="contained" type='submit' >Сохранить</Button>
                   </div>
                </form>
 
