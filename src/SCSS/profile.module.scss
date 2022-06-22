@@ -2,8 +2,72 @@
    width: 100%;
 }
 
+
+.wrapper {
+   display: flex;
+}
+
+
+.wrapperInfo {
+   margin: 0 0 0 20px;
+   display: flex;
+   flex-direction: column;
+   width: 100%;
+
+   .nameBlock {
+      margin: 0 0 20px 0;
+      border-bottom: 1px solid #111;
+   }
+}
+
 .avatarUser {
-   max-width: 250px;
+   width: 250px;
    height: auto;
-   object-fit: cover;
+   object-fit: contain;
+   border-radius: 50%;
+}
+
+.avatarBlock {
+   display: flex;
+   flex-direction: column;
+   position: relative;
+   overflow: hidden;
+   max-width: 250px;
+   border-radius: 50%;
+
+   .addFile {
+      display: none;
+   }
+
+   .addPhoto {
+      display: none;
+
+   }
+
+   &:hover {
+      .addPhoto {
+         cursor: pointer;
+         display: block;
+         position: absolute;
+         bottom: 0;
+         left: 0;
+         width: 250px;
+         height: 50px;
+         z-index: 1;
+         background-color: rgba(84, 83, 83, 0.529);
+
+         .addLogo {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, 0%);
+            display: block;
+            width: 40px;
+            height: 40px;
+            z-index: 2;
+         }
+      }
+   }
+
+
 }

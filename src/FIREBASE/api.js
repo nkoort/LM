@@ -18,7 +18,13 @@ import {
   arrayUnion,
 } from 'firebase/firestore'
 
-import { getStorage, ref, uploadBytes } from 'firebase/storage'
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getMetadata,
+  getDownloadURL,
+} from 'firebase/storage'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDRrYxJB50ropBvUh0y7kxl31FbCMSwWzY',
@@ -46,13 +52,18 @@ export const authAPI = {
   async register(email, password, fullData) {
     const auth = getAuth()
     let res = await createUserWithEmailAndPassword(auth, email, password)
-    debugger
+
     const ref = doc(db, 'tasks', res.user.uid)
     await setDoc(ref, { new: { startValue: 'value' } })
     return res
   },
   async setProfile(profile, id) {
     await setDoc(doc(db, 'users', id), profile)
+  },
+  async upProfile(data, id) {
+    const ref = doc(db, 'users', id)
+
+    await updateDoc(ref, data)
   },
   logIN(email, password) {
     const auth = getAuth()
@@ -75,11 +86,14 @@ export const profileAPI = {
   },
   async uploadPhoto(id, file) {
     //  const storage = getStorage()
-    const storageRef = ref(storage, id)
-    uploadBytes(storageRef, file).then((snapshot) => {
-      console.log('Uploaded a blob or file!')
-      console.log(snapshot)
+    const storageRef = ref(storage, `avatars/${id}`)
+    let a = uploadBytes(storageRef, file).then((snapshot) => {
+      let b = getDownloadURL(storageRef).then((url) => {
+        return url
+      })
+      return b
     })
+    return a
   },
 }
 

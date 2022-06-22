@@ -23,7 +23,7 @@ export const authUser = createAsyncThunk(
     onAuthStateChanged(res, async (user) => {
       if (user) {
         const getProfile = await profileAPI.getProfile(user.uid)
-        // debugger
+        //
         dispatch(setUser([getProfile, true]))
       }
     })
@@ -34,6 +34,15 @@ export const logOutUser = createAsyncThunk(
   async (dispatch) => {
     const res = await authAPI.logOUT()
     dispatch(setUser(['', false]))
+  },
+)
+export const uploadProto = createAsyncThunk(
+  'loginSlice/uploadProto',
+  async (params) => {
+    const res = await profileAPI.uploadPhoto(params[0], params[1])
+    let url = { photoURL: res }
+    const addUrl = await authAPI.upProfile(url, params[0])
+    return url.photoURL
   },
 )
 
@@ -50,6 +59,7 @@ const registerSlice = createSlice({
     setUser(state, action) {
       state.profile = action.payload[0]
       state.profileStatus = action.payload[1]
+      state.loadingStatus = true
     },
   },
   extraReducers: (builder) => {
@@ -78,6 +88,19 @@ const registerSlice = createSlice({
       .addCase(logOutUser.rejected, (state, action) => {
         state.profile = ''
         state.loadingStatus = false
+      })
+
+      .addCase(uploadProto.pending, (state, action) => {
+        state.loadingStatus = false
+        //   state.profile.photoURL = ''
+      })
+      .addCase(uploadProto.fulfilled, (state, action) => {
+        state.profile.photoURL = action.payload
+        state.loadingStatus = true
+      })
+      .addCase(uploadProto.rejected, (state, action) => {
+        state.loadingStatus = true
+        state.profile.photoURL = ''
       })
   },
 })
