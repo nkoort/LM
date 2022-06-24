@@ -15,6 +15,7 @@ import {
   setDoc,
   getDoc,
   updateDoc,
+  serverTimestamp,
   arrayUnion,
 } from 'firebase/firestore'
 
@@ -105,18 +106,48 @@ export const tasksAPI = {
   async addTask(id, data, taskId) {
     const ref = doc(db, 'tasks', id)
     data.taskId = taskId
-    //  if (index) {
-    //    await updateDoc(ref, {[tasks[index]: ]})
-    //  } else {
     await updateDoc(ref, {
       [`tasks.${taskId}`]: data,
     })
-    //  }
-
-    //
   },
   async getTasks(id) {
     const ref = doc(db, 'tasks', id)
+    const docSnap = await getDoc(ref)
+    return docSnap.data()
+  },
+}
+
+/////////////////////////////////////////////////////////////////////////////
+//                   GOALS API                                             //
+/////////////////////////////////////////////////////////////////////////////
+
+export const goalsAPI = {
+  async getGategorys() {
+    const ref = doc(db, 'directory', 'categories')
+    const docSnap = await getDoc(ref)
+    return docSnap.data()
+  },
+  async getStatus() {
+    const ref = doc(db, 'directory', 'status')
+    const docSnap = await getDoc(ref)
+    return docSnap.data()
+  },
+  async addGoal(id, data, goalId) {
+    const ref = doc(db, 'goals', id)
+    data.id = goalId
+    try {
+      let res = await updateDoc(ref, {
+        [`goals.${goalId}`]: data,
+      })
+      return res
+    } catch (e) {
+      await setDoc(doc(db, 'goals', id), {
+        goals: { [goalId]: data },
+      })
+    }
+  },
+  async getGoals(id) {
+    const ref = doc(db, 'goals', id)
     const docSnap = await getDoc(ref)
     return docSnap.data()
   },

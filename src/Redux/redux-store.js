@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import registerSlice from './login-reducer'
 import tasksSlice from './tasks-reducer'
+import goalsSlice from './goals-reducer'
+
 import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 
 export const store = configureStore({
-  reducer: { registerSlice, tasksSlice },
+  reducer: { registerSlice, tasksSlice, goalsSlice },
   middleware: [thunk],
 })
 

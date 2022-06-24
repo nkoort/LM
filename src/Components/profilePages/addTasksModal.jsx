@@ -21,6 +21,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import NativeSelect from '@mui/material/NativeSelect';
+import Autocomplete from '@mui/material/Autocomplete';
+import { getGoals } from '../../Redux/goals-reducer'
 
 
 
@@ -43,6 +45,7 @@ const styleSelects = {
 export default function AddTasksModal(props) {
    const dispatch = useDispatch()
 
+   const goals = useSelector((state) => state.goalsSlice.goals.goals)
    const addStatusMessage = useSelector((state) => state.tasksSlice.addStatusMessage)
    const uid = useSelector((state) => state.registerSlice.profile)
    const addStatus = useSelector((state) => state.tasksSlice.addStatus)
@@ -57,7 +60,11 @@ export default function AddTasksModal(props) {
    const [valueDateEndFact, setValueDateEndFact] = useState(null)
    const [status, setStatus] = useState('');
    const [priority, setPriority] = useState('');
+   const [goalName, setGoalName] = useState(null);
+   const [goalsNameSearch, setGoalNameSearch] = useState('');
+
    const indexItem = props.indexItem
+
 
 
    useEffect(() => {
@@ -82,7 +89,19 @@ export default function AddTasksModal(props) {
          setValueDateEndFact(null)
       }
    }, [indexItem])
-
+   useEffect(() => {
+      dispatch(getGoals(uid))
+      if (indexItem && tasks[indexItem].goal) {
+         setGoalName(tasks[indexItem].goal)
+      } else {
+         setGoalName('')
+      }
+      const arr = []
+      Object.keys(goals).map(key => {
+         arr.push({ label: goals[key].title, id: key })
+      })
+      setGoalNameSearch(arr)
+   }, [indexItem])
 
    const { register, watch, handleSubmit, formState: { errors }, control, reset, setError, clearErrors } = useForm({
 
@@ -100,7 +119,6 @@ export default function AddTasksModal(props) {
 
 
    const onSubmit = (data) => {
-
       data = {
          title: titeText,
          task: taskText,
@@ -109,6 +127,7 @@ export default function AddTasksModal(props) {
          status: status,
          priority: priority,
          endDateFact: valueDateEndFact,
+         goal: goalName,
       }
 
       let newObj = {}
@@ -147,6 +166,7 @@ export default function AddTasksModal(props) {
 
 
 
+
    return (
       <div>
          <Modal
@@ -160,6 +180,21 @@ export default function AddTasksModal(props) {
                <form onSubmit={handleSubmit(onSubmit)} className={s.formAddTask}>
                   <div className={s.inputContainer}>
                      <div>{errors && errorsItems}</div>
+                     <Autocomplete
+                        onChange={(e, value) => {
+                           setGoalName(value.label)
+                        }}
+                        value={goalName}
+                        inputValue={goalName}
+                        onInputChange={(event, newInputValue) => {
+                           setGoalName(newInputValue)
+                        }}
+                        disablePortal
+                        id="combo-box-demo"
+                        options={goalsNameSearch}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...register('goal')} {...params} label="Ціль (не обов'язково)" />}
+                     />
                      <TextField
                         {...register('title', { minLength: 2, maxLength: 80 })}
                         control={control}

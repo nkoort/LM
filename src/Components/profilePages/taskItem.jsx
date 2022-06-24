@@ -2,7 +2,7 @@ import s from '../../SCSS/tasksPage.module.scss';
 
 import * as dayjs from 'dayjs'
 import * as isLeapYear from 'dayjs/plugin/isLeapYear' // import plugin
-import 'dayjs/locale/ru'
+import 'dayjs/locale/uk'
 import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import classnames from 'classnames';
@@ -17,7 +17,7 @@ import Button from '@mui/material/Button'
 
 
 
-dayjs.locale('ru')
+dayjs.locale('uk')
 
 const TaskItem = ({ title, task, index, number, startDate, endDate, endDateFact, onOpenModal, changeIndex, priority = null, status = null }) => {
    const [newStatus, statusChange] = useState(status)

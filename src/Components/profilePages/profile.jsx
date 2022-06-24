@@ -6,7 +6,6 @@ import { Navigate, NavLink, Route, Routes } from 'react-router-dom';
 
 
 import { styled, useTheme } from '@mui/material/styles';
-import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -23,8 +22,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import { logOutUser } from '../../Redux/login-reducer';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
@@ -32,6 +29,7 @@ import AutoGraphIcon from '@mui/icons-material/AutoGraph';
 import BlockIcon from '@mui/icons-material/Block';
 import UserPage from './user';
 import TasksPage from './tasks';
+import GoalsPage from './goals/goals';
 
 
 const drawerWidth = 240;
@@ -180,7 +178,7 @@ export default function PersistentDrawerLeft() {
             <Routes>
                <Route path="/user" element={<UserPage />} />
                <Route path="/tasks" element={<TasksPage />} />
-               <Route path="/goals" element={<div>goals</div>} />
+               <Route path="/goals" element={<GoalsPage t={'t'} />} />
             </Routes>
          </Main>
       </Box>

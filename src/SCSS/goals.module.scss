@@ -1,0 +1,29 @@
+.formContainer {
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+}
+
+
+.goalItem {
+   display: grid;
+   grid-template-columns: 1fr 0.7fr 3fr;
+   gap: 10px;
+   background-color: #fff;
+   padding: 10px 20px;
+   border-radius: 15px;
+
+
+   &__status {
+      font-size: 12px;
+   }
+
+   &__category {
+      font-size: 12px;
+   }
+
+   &__title {
+      font-weight: 700;
+
+   }
+}
