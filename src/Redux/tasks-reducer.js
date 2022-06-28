@@ -18,6 +18,7 @@ export const getTasks = createAsyncThunk('loginSlice/getTasks', async (id) => {
 
 const initialState = {
   tasks: '',
+  targetTasks: '',
   addStatus: false,
   addStatusMessage: null,
 }

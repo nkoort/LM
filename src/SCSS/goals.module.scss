@@ -27,3 +27,69 @@
 
    }
 }
+
+.goalPageWrapper {
+   display: grid;
+   grid-template-rows: auto 1fr;
+   gap: 20px;
+
+   &__goal {
+      padding: 15px;
+      background-color: #fff;
+      border-radius: 20px;
+
+      &_title {
+         font-size: 20px;
+         text-align: center;
+         margin: 5px 0 20px 0;
+         font-weight: 700;
+      }
+
+      &_text {
+         margin: 0 10px 10px 10px;
+      }
+
+      &_dates {
+         display: flex;
+         gap: 10px;
+      }
+
+      &_statusBar {
+         display: flex;
+         gap: 10px;
+         font-size: 12px;
+         margin: 0 0 10px 0;
+         border-bottom: 1px solid #111;
+      }
+   }
+
+   &__tasks {
+      padding: 15px;
+      background-color: #fff;
+      border-radius: 20px;
+
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      &_item {
+         padding: 15px;
+         border-radius: 10px;
+         border: 1px solid #111;
+
+         display: grid;
+         grid-template-columns: auto auto 1fr;
+
+         .statusBlock {
+            display: flex;
+            gap: 10px;
+            margin: 0 20px 0 0;
+         }
+
+         .title {
+            font-weight: 700;
+            font-size: 16px;
+         }
+      }
+   }
+}

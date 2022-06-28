@@ -19,6 +19,7 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import dayjs from 'dayjs'
+import { NavLink } from 'react-router-dom'
 
 
 
@@ -43,7 +44,10 @@ const GoalItem = ({ goals, uid }) => {
          <div className={s.goalItem} key={key}>
             <div className={s.goalItem__status}>{status[goals[key].status]}</div>
             <div className={s.goalItem__category}>{categories[goals[key].category]}</div>
-            <div className={s.goalItem__title}>{goals[key].title} ({dateCreate})</div>
+            <NavLink to={`/profile/goals/${goals[key].id}`}>
+               <div className={s.goalItem__title}>{goals[key].title} ({dateCreate})</div>
+            </NavLink>
+
 
          </div>
       )

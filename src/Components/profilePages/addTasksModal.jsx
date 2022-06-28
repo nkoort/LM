@@ -45,7 +45,7 @@ const styleSelects = {
 export default function AddTasksModal(props) {
    const dispatch = useDispatch()
 
-   const goals = useSelector((state) => state.goalsSlice.goals.goals)
+   const goals = useSelector((state) => state.goalsSlice.goals)
    const addStatusMessage = useSelector((state) => state.tasksSlice.addStatusMessage)
    const uid = useSelector((state) => state.registerSlice.profile)
    const addStatus = useSelector((state) => state.tasksSlice.addStatus)

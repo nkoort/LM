@@ -28,9 +28,6 @@ export const getGoals = createAsyncThunk(
 )
 
 const initialState = {
-  goals: {
-    goals: {},
-  },
   categories: {},
   status: {},
 }
@@ -52,13 +49,13 @@ const goalsSlice = createSlice({
 
       .addCase(addGoal.pending, (state, action) => {})
       .addCase(addGoal.fulfilled, (state, action) => {
-        state.goals.goals = action.payload
+        state.goals = action.payload
       })
       .addCase(addGoal.rejected, (state, action) => {})
 
       .addCase(getGoals.pending, (state, action) => {})
       .addCase(getGoals.fulfilled, (state, action) => {
-        state.goals = action.payload
+        state.goals = action.payload.goals
       })
       .addCase(getGoals.rejected, (state, action) => {})
   },

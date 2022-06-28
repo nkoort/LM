@@ -1,0 +1,11 @@
+.wrapper {
+   display: grid;
+   grid-template-columns: auto;
+   gap: 20px;
+
+   .userBlock {
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 20px;
+   }
+}

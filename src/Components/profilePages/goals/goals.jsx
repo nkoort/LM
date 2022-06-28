@@ -21,23 +21,24 @@ const GoalsPage = (props) => {
 
    const [goalsArr, changeArr] = useState([])
    //Блок з селекторами
-   const goals = useSelector((state) => state.goalsSlice.goals.goals)
+   const goals = useSelector((state) => state.goalsSlice.goals)
    const uid = useSelector((state) => state.registerSlice.profile.id)
 
 
    // Глобальні ефекти та інші хуки
    useEffect(() => {
-
       dispatch(getGoals(uid))
       let newArr = []
-      Object.keys(goals).map(key => { newArr.push(goals[key]) })
-      changeArr(newArr)
+      if (goals) {
+         Object.keys(goals).map(key => { newArr.push(goals[key]) })
+         changeArr(newArr)
+      }
+
    }, [size(goals)])
 
    let orderObj = orderBy(goalsArr, ['createData'], ['asc'])
 
-   console.log('render')
-   const [open, setOpen] = useState(true)
+   const [open, setOpen] = useState(false)
    const modalControl = () => open ? setOpen(false) : setOpen(true)
 
 

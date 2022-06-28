@@ -27,9 +27,12 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import AutoGraphIcon from '@mui/icons-material/AutoGraph';
 import BlockIcon from '@mui/icons-material/Block';
-import UserPage from './user';
+import GroupIcon from '@mui/icons-material/Group';
+import UserPage from './profile/user';
 import TasksPage from './tasks';
 import GoalsPage from './goals/goals';
+import GoalPage from './goals/goalPage';
+import UsersPage from './users/users';
 
 
 const drawerWidth = 240;
@@ -79,7 +82,10 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 let linkData = [
-   ['Профиль', 'user', <AccountBoxIcon />], ['Задачи', 'tasks', <AssignmentTurnedInIcon />], ['Цели', 'goals', <AutoGraphIcon />]
+   ['Профиль', 'user', <AccountBoxIcon />],
+   ['Задачи', 'tasks', <AssignmentTurnedInIcon />],
+   ['Цели', 'goals', <AutoGraphIcon />],
+   ['Пользователи', 'users', <GroupIcon />]
 ]
 
 export default function PersistentDrawerLeft() {
@@ -87,6 +93,8 @@ export default function PersistentDrawerLeft() {
 
 
    const profileStatus = useSelector((state) => state.registerSlice.profileStatus)
+   const loading = useSelector((state) => state.usersSlice.loadingStatus)
+   const user = useSelector((state) => state.usersSlice.user)
 
    const logOUT = () => {
       dispatch(logOutUser(dispatch))
@@ -176,9 +184,11 @@ export default function PersistentDrawerLeft() {
          <Main open={open}>
             <DrawerHeader />
             <Routes>
-               <Route path="/user" element={<UserPage />} />
+               <Route path="/user/*" element={<UserPage loading={loading} user={user} />} />
                <Route path="/tasks" element={<TasksPage />} />
-               <Route path="/goals" element={<GoalsPage t={'t'} />} />
+               <Route path="/goals" element={<GoalsPage />} />
+               <Route path="/goals/*" element={<GoalPage />} />
+               <Route path="/users" element={<UsersPage />} />
             </Routes>
          </Main>
       </Box>

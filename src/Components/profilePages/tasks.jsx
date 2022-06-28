@@ -41,8 +41,6 @@ const TasksPage = (props) => {
    let sizeCompletedValue = tasks ? Object.keys(tasks).filter(key => tasks[key].status === 'Completed') : {}
 
    useEffect(() => {
-      console.log(sizeTasks)
-
       changeCompleted(size(sizeCompletedValue))
       changeSize(size(tasks))
       dispatch(getTasks(uid))

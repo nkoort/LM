@@ -17,6 +17,8 @@ import {
   updateDoc,
   serverTimestamp,
   arrayUnion,
+  collection,
+  getDocs,
 } from 'firebase/firestore'
 
 import {
@@ -148,6 +150,26 @@ export const goalsAPI = {
   },
   async getGoals(id) {
     const ref = doc(db, 'goals', id)
+    const docSnap = await getDoc(ref)
+    return docSnap.data()
+  },
+}
+
+/////////////////////////////////////////////////////////////////////////////
+//                   USERS API                                             //
+/////////////////////////////////////////////////////////////////////////////
+
+export const usersAPI = {
+  async getUsers() {
+    const ref = await getDocs(collection(db, 'users'))
+    const users = []
+    ref.forEach((doc) => {
+      users.push(doc.data())
+    })
+    return users
+  },
+  async getUser(id) {
+    const ref = doc(db, 'users', id)
     const docSnap = await getDoc(ref)
     return docSnap.data()
   },
