@@ -12,6 +12,7 @@ import Avatar from './avatar';
 import { useMatch } from 'react-router-dom';
 import { useEffect } from 'react';
 import { getUser, setStatus } from '../../../Redux/users-reducer';
+import Comments from '../comments/comments';
 
 
 
@@ -62,26 +63,33 @@ const UserPage = (props) => {
    return (
       <div className={s.wrapper}>
          <div>
-            <Avatar
-               url={profile.photoURL}
-               idMe={profileMe.id}
-               id={user.id}
-               matchSize={size(match)}
-               loadStatus={loadStatus} />
-         </div>
-         <div className={s.wrapperInfo}>
-            <div className={s.nameBlock}>
-               <div>Имя: {profile.userName}</div>
-               <div>
-                  {!statusEdit && <div className={s.statusDiv}>Статус</div>}
-                  {statusEdit && <input className={s.statusInput} type="text" value={'Статус'} />}
+            <div>
+               {/* <Avatar
+                  url={profile.photoURL}
+                  idMe={profileMe.id}
+                  id={user.id}
+                  matchSize={size(match)}
+                  loadStatus={loadStatus} /> */}
+               <Avatar
+                  match={match} />
+            </div>
+            <div className={s.wrapperInfo}>
+               <div className={s.nameBlock}>
+                  <div>Имя: {profile.userName}</div>
+                  <div>
+                     {!statusEdit && <div className={s.statusDiv}>Статус</div>}
+                     {statusEdit && <input className={s.statusInput} type="text" value={'Статус'} />}
+                  </div>
+               </div>
+               <div className={s.infoBlock}>
+                  <div>Почта: {profile.email}</div>
+                  <div>Дата рождения: {profile.birthDay}</div>
+                  <div>ID: {profile.id}</div>
                </div>
             </div>
-            <div className={s.infoBlock}>
-               <div>Почта: {profile.email}</div>
-               <div>Дата рождения: {profile.birthDay}</div>
-               <div>ID: {profile.id}</div>
-            </div>
+         </div>
+         <div>
+            <Comments />
          </div>
       </div >
    )

@@ -1,0 +1,49 @@
+.formBlock {
+   display: flex;
+   margin: 0 0 20px 0;
+
+   .input {
+      flex: 1 1 90%;
+      height: 30px;
+      background-color: #fff;
+      padding: 0 10px;
+   }
+
+   .button {
+      flex: 1 1 10%;
+      height: 30px;
+      background-color: green;
+      color: #fff;
+      margin: 0 0 0 10px;
+   }
+
+}
+
+
+.comments {
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+
+   .commentBlock {
+      background-color: #fff;
+      padding: 10px 15px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 10px;
+
+      .likes {
+         display: flex;
+         gap: 10px;
+      }
+
+
+      .user img {
+         width: 40px;
+         height: 40px;
+         object-fit: cover;
+         border-radius: 50%;
+      }
+   }
+}

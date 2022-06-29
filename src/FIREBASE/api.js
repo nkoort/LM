@@ -17,8 +17,11 @@ import {
   updateDoc,
   serverTimestamp,
   arrayUnion,
+  arrayRemove,
   collection,
   getDocs,
+  query,
+  where,
 } from 'firebase/firestore'
 
 import {
@@ -28,6 +31,7 @@ import {
   getMetadata,
   getDownloadURL,
 } from 'firebase/storage'
+import { nanoid } from '@reduxjs/toolkit'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDRrYxJB50ropBvUh0y7kxl31FbCMSwWzY',
@@ -42,6 +46,8 @@ const app = initializeApp(firebaseConfig)
 const analytics = getAnalytics(app)
 const db = getFirestore(app)
 const storage = getStorage(app)
+
+const { v4: uuidv4 } = require('uuid')
 /////////////////// NEXT ROWS WITH USER API CODE ///////////////////
 
 /////////////////////////////////////////////////////////////////////////////
@@ -172,5 +178,41 @@ export const usersAPI = {
     const ref = doc(db, 'users', id)
     const docSnap = await getDoc(ref)
     return docSnap.data()
+  },
+}
+
+export const commentsAPI = {
+  async getComments(type, id) {
+    const ref = await getDocs(collection(db, `/comments/${type}/${id}`))
+    let docs = []
+    ref.forEach((doc) => {
+      docs.push(doc.data())
+    })
+    return docs
+  },
+  async addComment(type, id, data) {
+    await setDoc(doc(db, `/comments/${type}/${id}`, data.commentId), data)
+  },
+  async getUsers(data) {
+    const ref = collection(db, 'users')
+
+    const users = await getDocs(query(ref, where('id', 'in', data)))
+    const dataUsers = []
+    users.forEach((doc) => {
+      dataUsers.push(doc.data())
+    })
+    return dataUsers
+  },
+  async addLike(type, pageID, commentId, userId) {
+    const ref = doc(db, `/comments/${type}/${pageID}`, commentId)
+    await updateDoc(ref, {
+      likes: arrayUnion(userId),
+    })
+  },
+  async removeLike(type, pageID, commentId, userId) {
+    const ref = doc(db, `/comments/${type}/${pageID}`, commentId)
+    await updateDoc(ref, {
+      likes: arrayRemove(userId),
+    })
   },
 }

@@ -9,6 +9,7 @@ export const getUsers = createAsyncThunk(
     return res
   },
 )
+
 export const getUser = createAsyncThunk(
   'usersSlice/getUser',
   async (params) => {

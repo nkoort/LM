@@ -1,5 +1,5 @@
 import s from '../../../SCSS/users.module.scss'
-
+import avatar from '../../../assets/img/avatarDefault.png'
 
 import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
@@ -28,12 +28,18 @@ const UsersPage = (props) => {
    }, [])
    // console.log(typeof (users))
    const items = Object.keys(users).map(key => {
-
+      const photo = users[key].photoURL ? users[key].photoURL : avatar
 
       return (
          <div key={users[key].id} className={s.userBlock}>
             <NavLink to={`/profile/user/${users[key].id}`}>
-               <div >{users[key].userName}</div>
+               <div className={s.userItem}>
+                  <div className={s.userPhoto}>
+                     <img src={photo} alt="" />
+                  </div>
+                  <div >{users[key].userName}</div>
+               </div>
+
             </NavLink >
          </div>)
 

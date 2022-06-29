@@ -1,14 +1,16 @@
+//Бібліотеки та функции
 import { configureStore } from '@reduxjs/toolkit'
+import thunk from 'redux-thunk'
+
+//Власні слайси
 import registerSlice from './login-reducer'
 import tasksSlice from './tasks-reducer'
 import goalsSlice from './goals-reducer'
 import usersSlice from './users-reducer'
-
-import logger from 'redux-logger'
-import thunk from 'redux-thunk'
+import commentsSlice from './comments-reducer'
 
 export const store = configureStore({
-  reducer: { registerSlice, tasksSlice, goalsSlice, usersSlice },
+  reducer: { registerSlice, tasksSlice, goalsSlice, usersSlice, commentsSlice },
   middleware: [thunk],
 })
 

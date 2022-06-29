@@ -97,9 +97,12 @@ export default function AddTasksModal(props) {
          setGoalName('')
       }
       const arr = []
-      Object.keys(goals).map(key => {
-         arr.push({ label: goals[key].title, id: key })
-      })
+      if (goals) {
+         Object.keys(goals).map(key => {
+            arr.push({ label: goals[key].title, id: key })
+         })
+      }
+
       setGoalNameSearch(arr)
    }, [indexItem])
 
