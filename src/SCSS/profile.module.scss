@@ -75,3 +75,20 @@
 
 
 }
+
+.goalsWrapper {
+   padding: 10px;
+   border: 1px solid #111;
+   border-radius: 20px;
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+
+   .goalsProfile {
+      display: flex;
+      gap: 10px;
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 20px;
+   }
+}

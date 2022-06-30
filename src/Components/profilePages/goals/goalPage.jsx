@@ -13,6 +13,7 @@ import { getTasks } from '../../../Redux/tasks-reducer'
 import { filter, size, orderBy } from 'lodash'
 import classnames from 'classnames'
 import * as dayjs from 'dayjs'
+import Comments from '../comments/comments'
 //  Власті слайси та компоненти
 
 
@@ -135,7 +136,9 @@ const GoalPage = (props) => {
             {targetTasks.length === 0 && <div className={s.goalPageWrapper__tasks_item} >За данною ціллю не закріплено жодної задачі. Ви можете створити задачу в розділі задачі та прикріпити до неї головну ціль, або додати її до вже існуючих задач!</div>}
             {targetTasks}
          </div>
-
+         <div>
+            <Comments type='goals' />
+         </div>
       </div >
    )
 }

@@ -18,6 +18,7 @@ import AddTasksModal from './addTasksModal';
 import { getTasks, setStatusMessage } from '../../Redux/tasks-reducer';
 import TaskItem from './taskItem';
 import { height } from '@mui/system';
+import { getGoals } from '../../Redux/goals-reducer';
 
 
 const TasksPage = (props) => {
@@ -27,6 +28,7 @@ const TasksPage = (props) => {
    const tasks = useSelector((state) => state.tasksSlice.tasks)
    const uid = useSelector((state) => state.registerSlice.profile.id)
    const addStatusMessage = useSelector((state) => state.tasksSlice.addStatusMessage)
+   const goals = useSelector((state) => state.goalsSlice.goals)
 
    // debugger
 
@@ -51,9 +53,11 @@ const TasksPage = (props) => {
 
 
    const onOpenModal = () => {
+      dispatch(getGoals(uid))
       if (open) {
          setOpen(false)
          dispatch(setStatusMessage(null))
+
          changeIndex('')
       } else {
          setOpen(true)
@@ -96,7 +100,7 @@ const TasksPage = (props) => {
 
    return (
       <div>
-         <AddTasksModal open={open} handleClose={onOpenModal} editMode={editMode} changeMode={changeMode} indexItem={indexItem} changeIndex={changeIndex} />
+         <AddTasksModal open={open} goals={goals} handleClose={onOpenModal} editMode={editMode} changeMode={changeMode} indexItem={indexItem} changeIndex={changeIndex} />
          <div className={s.toolBar}>
             <div className={s.toolBar__addBtn}><Tooltip title="Добавить новую задачу" placement="right" arrow >
                <Fab color="primary" aria-label="add" onClick={(data) => onOpenModal('add')}>

@@ -22,7 +22,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import NativeSelect from '@mui/material/NativeSelect';
 import Autocomplete from '@mui/material/Autocomplete';
-import { getGoals } from '../../Redux/goals-reducer'
+import { getd } from '../../Redux/goals-reducer'
 
 
 
@@ -45,7 +45,7 @@ const styleSelects = {
 export default function AddTasksModal(props) {
    const dispatch = useDispatch()
 
-   const goals = useSelector((state) => state.goalsSlice.goals)
+   // const goals = useSelector((state) => state.goalsSlice.goals)
    const addStatusMessage = useSelector((state) => state.tasksSlice.addStatusMessage)
    const uid = useSelector((state) => state.registerSlice.profile)
    const addStatus = useSelector((state) => state.tasksSlice.addStatus)
@@ -66,7 +66,7 @@ export default function AddTasksModal(props) {
    const indexItem = props.indexItem
 
 
-
+   console.log(props.goals)
    useEffect(() => {
       if (indexItem !== '') {
          let start = tasks[indexItem].startDate
@@ -90,21 +90,27 @@ export default function AddTasksModal(props) {
       }
    }, [indexItem])
    useEffect(() => {
-      dispatch(getGoals(uid))
+      console.log(props.open)
+      // dispatch(getGoals(uid))
       if (indexItem && tasks[indexItem].goal) {
          setGoalName(tasks[indexItem].goal)
       } else {
          setGoalName('')
       }
       const arr = []
-      if (goals) {
-         Object.keys(goals).map(key => {
-            arr.push({ label: goals[key].title, id: key })
+      if (props.goals) {
+         Object.keys(props.goals).map(key => {
+            arr.push({ label: props.goals[key].title, id: key })
          })
       }
-
+      console.log(props.goals)
+      console.log(arr)
       setGoalNameSearch(arr)
-   }, [indexItem])
+   }, [indexItem, props.goals])
+
+   useEffect(() => {
+      // dispatch(getd(uid))
+   }, [])
 
    const { register, watch, handleSubmit, formState: { errors }, control, reset, setError, clearErrors } = useForm({
 

@@ -23,6 +23,9 @@ export const getGoals = createAsyncThunk(
   'goalSlice/getGoals',
   async (params) => {
     let res = await goalsAPI.getGoals(params)
+    if (!res) {
+      res = {}
+    }
     return res
   },
 )

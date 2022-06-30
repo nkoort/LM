@@ -13,6 +13,8 @@ import { useMatch } from 'react-router-dom';
 import { useEffect } from 'react';
 import { getUser, setStatus } from '../../../Redux/users-reducer';
 import Comments from '../comments/comments';
+import { getGoals } from '../../../Redux/goals-reducer';
+import GoalItem from '../goals/goalItem';
 
 
 
@@ -38,6 +40,7 @@ const UserPage = (props) => {
    const profileMe = useSelector((state) => state.registerSlice.profile)
    const user = useSelector((state) => state.usersSlice.user)
    const loadStatus = useSelector((state) => state.registerSlice.loadingStatus)
+   const goals = useSelector((state) => state.goalsSlice.goals)
 
    const [statusEdit, statusChange] = useState(false)
 
@@ -51,27 +54,39 @@ const UserPage = (props) => {
    useEffect(() => {
       if (match) {
          dispatch(getUser(match.params.uid))
+         dispatch(getGoals(match.params.uid))
          setProfile(user)
       } else {
          setProfile(profileMe)
+         dispatch(getGoals(profileMe.id))
       }
    }, [loadStatus, match, props.user.id])
 
 
+   function goalsItems() {
+      if (goals) {
+         let items = Object.keys(goals).map(key => {
+            return (
+               // <div className={s.goalsProfile}>
+               //    <div className={s.goalItem}>{goals[key].id}</div>
+               //    <div className={s.goalItem}>{goals[key].title}</div>
+               // </div>
+               <GoalItem goals={goals} />
+            )
+         })
+         return items
+      } else {
+         return <div>Користувачь поки не встановив собі жодної цілі...</div>
+      }
+
+   }
 
 
    return (
       <div className={s.wrapper}>
          <div>
             <div>
-               {/* <Avatar
-                  url={profile.photoURL}
-                  idMe={profileMe.id}
-                  id={user.id}
-                  matchSize={size(match)}
-                  loadStatus={loadStatus} /> */}
-               <Avatar
-                  match={match} />
+               <Avatar match={match} />
             </div>
             <div className={s.wrapperInfo}>
                <div className={s.nameBlock}>
@@ -88,8 +103,11 @@ const UserPage = (props) => {
                </div>
             </div>
          </div>
+         <div className={s.goalsWrapper}>
+            <GoalItem goals={goals} />
+         </div>
          <div>
-            <Comments />
+            <Comments type='profiles' />
          </div>
       </div >
    )

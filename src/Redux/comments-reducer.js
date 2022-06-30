@@ -10,11 +10,13 @@ export const getComments = createAsyncThunk(
     const data = []
     const res = await commentsAPI.getComments(params[0], params[1])
     data.push(res)
+
     if (res.length > 0) {
       let ids = res.map((key) => {
         return key.author
       })
       const users = await commentsAPI.getUsers(uniq(ids))
+      users.push(params[2])
       data.push(users)
     }
     return data
@@ -85,7 +87,7 @@ const commentsSlice = createSlice({
           'commentId',
           action.payload[2],
         ])
-        debugger
+
         state.comments[index].likes.push(action.payload[3])
       })
 
@@ -94,7 +96,7 @@ const commentsSlice = createSlice({
           'commentId',
           action.payload[2],
         ])
-        debugger
+
         state.comments[index].likes.splice(
           state.comments[index].likes.indexOf(action.payload[3]),
           1,
