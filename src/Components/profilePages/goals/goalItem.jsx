@@ -9,7 +9,8 @@ import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect } from 'react'
 import { size } from 'lodash'
-
+import dayjs from 'dayjs'
+import { NavLink } from 'react-router-dom'
 //  Власті слайси та компоненти
 
 
@@ -17,8 +18,7 @@ import { size } from 'lodash'
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import dayjs from 'dayjs'
-import { NavLink } from 'react-router-dom'
+
 import { getDirectory } from '../../../Redux/goals-reducer'
 
 

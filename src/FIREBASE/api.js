@@ -31,6 +31,7 @@ import {
   getMetadata,
   getDownloadURL,
 } from 'firebase/storage'
+
 import { nanoid } from '@reduxjs/toolkit'
 
 const firebaseConfig = {
@@ -41,8 +42,10 @@ const firebaseConfig = {
   messagingSenderId: '297848949164',
   appId: '1:297848949164:web:2cbe0a3658204f62645209',
   measurementId: 'G-FEY9JNWZ3J',
+  databaseURL:
+    'https://lifemanager-59bee-default-rtdb.europe-west1.firebasedatabase.app',
 }
-const app = initializeApp(firebaseConfig)
+export const app = initializeApp(firebaseConfig)
 const analytics = getAnalytics(app)
 const db = getFirestore(app)
 const storage = getStorage(app)

@@ -8,9 +8,17 @@ import tasksSlice from './tasks-reducer'
 import goalsSlice from './goals-reducer'
 import usersSlice from './users-reducer'
 import commentsSlice from './comments-reducer'
+import budgetSlice from './budget-reducer'
 
 export const store = configureStore({
-  reducer: { registerSlice, tasksSlice, goalsSlice, usersSlice, commentsSlice },
+  reducer: {
+    registerSlice,
+    tasksSlice,
+    goalsSlice,
+    usersSlice,
+    commentsSlice,
+    budgetSlice,
+  },
   middleware: [thunk],
 })
 

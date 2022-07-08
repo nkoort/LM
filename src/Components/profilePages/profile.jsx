@@ -33,6 +33,8 @@ import TasksPage from './tasks';
 import GoalsPage from './goals/goals';
 import GoalPage from './goals/goalPage';
 import UsersPage from './users/users';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import BudgetPage from './budget/budget';
 
 
 const drawerWidth = 240;
@@ -82,10 +84,11 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 let linkData = [
-   ['Профиль', 'user', <AccountBoxIcon />],
-   ['Задачи', 'tasks', <AssignmentTurnedInIcon />],
-   ['Цели', 'goals', <AutoGraphIcon />],
-   ['Пользователи', 'users', <GroupIcon />]
+   ['Профіль', 'user', <AccountBoxIcon />],
+   ['Задачі', 'tasks', <AssignmentTurnedInIcon />],
+   ['Цілі', 'goals', <AutoGraphIcon />],
+   ['Бюджет', 'budget', <AccountBalanceWalletIcon />],
+   ['КОристувачі', 'users', <GroupIcon />]
 ]
 
 export default function PersistentDrawerLeft() {
@@ -189,6 +192,7 @@ export default function PersistentDrawerLeft() {
                <Route path="/goals" element={<GoalsPage />} />
                <Route path="/goals/*" element={<GoalPage />} />
                <Route path="/users" element={<UsersPage />} />
+               <Route path="/budget" element={<BudgetPage />} />
             </Routes>
          </Main>
       </Box>

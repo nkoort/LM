@@ -1,0 +1,56 @@
+input {
+   background-color: #fff;
+   padding: 5px;
+   width: 200px;
+   height: 20px;
+   margin: 5px
+}
+
+form {
+   display: flex;
+   flex-direction: column;
+   padding: 10px 20px;
+   border: 1px solid #111;
+   border-radius: 10px;
+}
+
+.subtitle {
+   font-size: 20px;
+   font-weight: 700;
+   margin: 0px 0px 20px -10px;
+}
+
+.fillters {
+   display: flex;
+   gap: 10px;
+   width: 100%;
+
+   .filter {
+      flex: 1 1 auto;
+   }
+
+}
+
+
+.fields {
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+
+   .wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .fieldLine {
+         display: flex;
+         align-items: center;
+
+
+         .number {
+            margin: 0 10px 0 0;
+         }
+      }
+   }
+
+}
