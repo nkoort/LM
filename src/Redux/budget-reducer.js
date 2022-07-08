@@ -20,6 +20,26 @@ export const delField = createAsyncThunk(
     return params
   },
 )
+export const realtimeUpdate = createAsyncThunk(
+  'budgetSlice/realtimeUpdate',
+  async (params) => {
+    const dt = Date.parse(new Date())
+    const data = { ...params[6] }
+    //  debugger
+    data[params[4]] = params[5]
+    //  data.meta.changeDate = dt
+    debugger
+    budgetAPI.realtimeUpdate(
+      params[0],
+      params[1],
+      params[2],
+      params[3],
+      // params[4],
+      data,
+    )
+    //  return params
+  },
+)
 
 export const changeField = createAsyncThunk(
   'budgetSlice/changeField',
@@ -73,6 +93,7 @@ const budgetSlice = createSlice({
                 category: '',
                 name: '',
                 value: '',
+                amount: 1,
                 meta: {
                   id: action.payload[0],
                   number: 1,
@@ -87,6 +108,7 @@ const budgetSlice = createSlice({
               category: '',
               name: '',
               value: '',
+              amount: 1,
               meta: {
                 id: action.payload[0],
                 number: action.payload[1] + 1,
@@ -97,32 +119,6 @@ const budgetSlice = createSlice({
             }
           }
         }
-
-        //   if (action.payload[1] === 0) {
-        //     state.plan[0].push({
-        //       category: '',
-        //       name: '',
-        //       value: '',
-        //       meta: {
-        //         id: action.payload[0],
-        //         number: 1,
-        //         createDate: dt,
-        //         changeDate: dt,
-        //       },
-        //     })
-        //   } else {
-        //     state.plan[0].push({
-        //       category: '',
-        //       name: '',
-        //       value: '',
-        //       meta: {
-        //         id: action.payload[0],
-        //         number: action.payload[1] + 1,
-        //         createDate: dt,
-        //         changeDate: dt,
-        //       },
-        //     })
-        //   }
       })
       .addCase(addField.rejected, (state, action) => {})
 

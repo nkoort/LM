@@ -12,7 +12,7 @@ import dayjs from 'dayjs'
 import { nanoid } from '@reduxjs/toolkit'
 
 
-import { addField, changeField, delField } from '../../../Redux/budget-reducer'
+import { addField, changeField, delField, realtimeUpdate } from '../../../Redux/budget-reducer'
 
 // Єлементи МАТЕРІАЛ ЮІ
 import TextField from '@mui/material/TextField'
@@ -20,6 +20,7 @@ import Button from '@mui/material/Button'
 import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'
 import { budgetAPI } from '../../../FIREBASE/apiRealtime'
+
 
 const BudgetField = ({ register, plan, watch, errors }) => {
    // Базові виклики різних функций та інше.
@@ -56,8 +57,10 @@ const BudgetField = ({ register, plan, watch, errors }) => {
    //Функції рендеру повторяючихся компонентів на сторінку
    function item() {
       const field = []
-      function onChange(e, key, type) {
+      function onChange(e, key, type, date, item) {
          dispatch(changeField([e.target.value, key, type]))
+         dispatch(realtimeUpdate([uid, filters.type, date, key, type, e.target.value, item]))
+         // budgetAPI.realtimeUpdate(uid, filters.type, date, key, type, e.target.value)
       }
       if (size(plan) > 0) {
 
@@ -90,18 +93,29 @@ const BudgetField = ({ register, plan, watch, errors }) => {
             const valueText = (type) => {
                switch (type) {
                   case 'minLength':
-                     return 'Вкажіть вагу';
+                     return 'Вкажіть вартість';
                   case 'required':
-                     return 'Вкажіть вагу';
+                     return 'Вкажіть вартість';
                   default:
-                     return 'Вага'
+                     return 'Вартість'
+               }
+            }
+            const errAmount = errors?.plan?.[key]?.amount ? true : false
+            const valueAmont = (type) => {
+               switch (type) {
+                  case 'minLength':
+                     return 'Вкажіть кількість';
+                  case 'required':
+                     return 'Вкажіть кількість';
+                  default:
+                     return 'Кількість'
                }
             }
 
 
 
             field.push(
-               <div key={plan[0][key].meta.id} className={s.wrapper}>
+               <div key={plan[0][key]?.meta?.id} className={s.wrapper}>
                   <div className={s.fieldLine}>
                      <div className={s.number}>
                         №: {i + 1}
@@ -109,10 +123,8 @@ const BudgetField = ({ register, plan, watch, errors }) => {
                      <TextField
                         {...register(`plan.${key}.name`, { required: true, minLength: 2 })}
                         id="standard-helperText"
-                        // label='name'
                         error={errName}
-                        onChange={(e, k, type) => onChange(e, key, 'name')}
-                        // defaultValue={plan[0][key].name}
+                        onChange={(e, k, type, d, i) => onChange(e, key, 'name', plan[0][key].meta.periodDate, plan[0][key])}
                         value={plan[0][key].name}
                         helperText={nameText(errors?.plan?.[key]?.name?.type)}
                         variant="standard"
@@ -120,24 +132,33 @@ const BudgetField = ({ register, plan, watch, errors }) => {
                      <TextField
                         {...register(`plan.${key}.category`, { required: true, minLength: 2 })}
                         id="standard-helperText"
-                        // label='category'
                         error={errCat}
-                        onChange={(e, k) => onChange(e, key, 'category')}
+                        onChange={(e, k) => onChange(e, key, 'category', plan[0][key].meta.periodDate, plan[0][key])}
                         defaultValue={plan[0][key].category}
                         helperText={categoryText(errors?.plan?.[key]?.category?.type)}
                         variant="standard"
                      />
                      <TextField
-                        {...register(`plan.${key}.value`, { required: true, minLength: 1 })}
+                        {...register(`plan.${key}.price`, { required: true, minLength: 1 })}
                         id="standard-helperText"
-                        // label='value'
+                        error={errAmount}
+                        onChange={(e, k) => onChange(e, key, 'amount', plan[0][key].meta.periodDate, plan[0][key])}
+                        defaultValue={plan[0][key].amount}
+                        helperText={valueAmont(errors?.plan?.[key]?.amount)}
+                        variant="standard"
+                        type="number"
+                     />
+                     <TextField
+                        {...register(`plan.${key}.amount`, { required: true, minLength: 1 })}
+                        id="standard-helperText"
                         error={errValue}
-                        onChange={(e, k) => onChange(e, key, 'value')}
+                        onChange={(e, k) => onChange(e, key, 'value', plan[0][key].meta.periodDate, plan[0][key])}
                         defaultValue={plan[0][key].value}
                         helperText={valueText(errors?.plan?.[key]?.value?.type)}
                         variant="standard"
                         type="number"
                      />
+
                   </div>
                   <ClearIcon onClick={(i, t, d, f) => deleteField(uid, filters.type, plan[0][key].meta.periodDate, key)} />
                </div>

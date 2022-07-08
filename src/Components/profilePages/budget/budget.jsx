@@ -76,6 +76,7 @@ const BudgetPage = (props) => {
 
    // Функція відправки форми
    const onSubmit = (data, e) => {
+
       const m = Number(data.month)
       const y = Number(data.year)
       const mon = m < 10 ? `0${m}` : m
